@@ -1,5 +1,6 @@
 import readline from 'node:readline';
 import os from 'node:os'
+import {compress, decompress} from "./commands/zip.js";
 
 let homeDir = os.homedir();
 
@@ -22,10 +23,26 @@ readLn.on('close', () => {
 readLn.on('line', (chunk) => {
     const chunkStringified = chunk.toString();
     if (chunkStringified.includes('.exit')) readLn.close();
+    handleCommands(chunk)
     newLn();
 })
 
 function newLn() {
     process.stdout.write(`You are currently in ${homeDir}\n`);
     readLn.prompt();
+}
+
+function handleCommands(commandString) {
+    const [command, ...args] = commandString.split(' ').map((value) => value.trim());
+    console.log(args)
+    switch (command) {
+        case 'compress':
+            compress(args, homeDir);
+            console.info('Successfully compressed');
+            break;
+        case 'decompress':
+            decompress(args, homeDir);
+            console.info('Successfully decompressed');
+            break;
+    }
 }
