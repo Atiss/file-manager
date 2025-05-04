@@ -53,6 +53,7 @@ async function handleCommands(commandString) {
                 break;
             case 'cd':
                 homeDir = await cd(args[0], homeDir);
+                break;
             default:
                 console.error('Invalid input');
         }

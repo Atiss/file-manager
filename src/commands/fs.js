@@ -1,5 +1,5 @@
 import { readdir, stat } from 'node:fs/promises';
-import { resolve, dirname, parse } from 'node:path';
+import { resolve, dirname } from 'node:path';
 
 export const list = async (path) => {
     try {
