@@ -2,6 +2,7 @@ import readline from 'node:readline';
 import os from 'node:os'
 import {compress, decompress} from "./commands/zip.js";
 import {list, up, cd} from "./commands/fs.js";
+import {create, createDir, read, rename, copy, move, remove} from './commands/fo.js';
 
 let homeDir = os.homedir();
 
@@ -24,9 +25,10 @@ readLn.on('close', () => {
 readLn.on('line', async (chunk) => {
     const chunkStringified = chunk.toString();
     if (chunkStringified.includes('.exit')) readLn.close();
-    await handleCommands(chunk)
+    if (chunkStringified) await handleCommands(chunk);
     newLn();
-})
+});
+
 
 function newLn() {
     process.stdout.write(`You are currently in ${homeDir}\n`);
@@ -53,6 +55,27 @@ async function handleCommands(commandString) {
                 break;
             case 'cd':
                 homeDir = await cd(args[0], homeDir);
+                break;
+            case 'cat':
+                await read(args[0], homeDir);
+                break;
+            case 'add':
+                await create(args[0], homeDir);
+                break;
+            case 'mkdir':
+                await createDir(args[0], homeDir);
+                break;
+            case 'rn':
+                await rename(args[0], args[1], homeDir);
+                break;
+            case 'cp':
+                await copy(args[0], args[1], homeDir);
+                break;
+            case 'mv':
+                await move(args[0], args[1], homeDir);
+                break;
+            case 'rm':
+                await remove(args[0], homeDir);
                 break;
             default:
                 console.error('Invalid input');
