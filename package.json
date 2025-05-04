@@ -1,0 +1,16 @@
+{
+  "name": "filemanager",
+  "version": "1.0.0",
+  "main": "main.js",
+  "engines": {
+    "node": ">=22.14.0"
+  },
+  "type": "module",
+  "scripts": {
+    "start": "node src/main.js -- --username=user",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
