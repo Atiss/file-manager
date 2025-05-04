@@ -3,6 +3,8 @@ import os from 'node:os'
 import {compress, decompress} from "./commands/zip.js";
 import {list, up, cd} from "./commands/fs.js";
 import {create, createDir, read, rename, copy, move, remove} from './commands/fo.js';
+import {getOsInfo} from "./commands/os.js";
+import {calculateHash} from "./commands/hash.js";
 
 let homeDir = os.homedir();
 
@@ -76,6 +78,12 @@ async function handleCommands(commandString) {
                 break;
             case 'rm':
                 await remove(args[0], homeDir);
+                break;
+            case 'os':
+                await getOsInfo(args[0]);
+                break;
+            case 'hash':
+                await calculateHash(args[0], homeDir);
                 break;
             default:
                 console.error('Invalid input');
