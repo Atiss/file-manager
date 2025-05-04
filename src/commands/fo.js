@@ -49,33 +49,38 @@ export const rename = async (path, newName, currentDir) => {
     }
 };
 
-export const copy = async (path, destination, currentDir) => {
-    if(!path || !destination) throw new Error('Invalid arguments');
-    const source = resolve(currentDir, path);
+const copyStream = async(source, destination) => {
     const readStream = createReadStream(source);
     const writeStream = createWriteStream(destination);
 
-    writeStream.on('finish', () => {
-        stdout.write(`File successfully copied\n`);
-    });
-    readStream.pipe(writeStream);
+    return new Promise((resolve, reject) => {
+        readStream.on('error', reject);
+        writeStream.on('error', reject);
+        writeStream.on('finish', resolve);
+        readStream.pipe(writeStream);
+    })
+}
+export const copy = async (path, destination, currentDir) => {
+    if(!path || !destination) throw new Error('Invalid arguments');
+    const source = resolve(currentDir, path);
+    try{
+        await copyStream(source, destination);
+        console.info('Successfully copied');
+    }catch (err) {
+        throw new Error(err);
+    }
 }
 
 export const move = async (path, destination, currentDir) => {
     if(!path || !destination) throw new Error('Invalid arguments');
     const source = resolve(currentDir, path);
-    const readStream = createReadStream(source);
-    const writeStream = createWriteStream(destination);
-
-    writeStream.on('finish', async() => {
-        try {
-            await rm(source);
-            stdout.write(`File successfully moved\n`);
-        } catch (err) {
-            throw err;
-        }
-    });
-    readStream.pipe(writeStream);
+    try{
+        await copyStream(source, destination);
+        await rm(source)
+        console.info('Successfully moved');
+    }catch (err) {
+        throw new Error(err);
+    }
 }
 
 export const remove = async (path, currentDir) => {
