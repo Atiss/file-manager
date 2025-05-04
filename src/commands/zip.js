@@ -9,7 +9,7 @@ const parseArgs = async (args, currentDir) => {
     const inputPath = args[0];
     const inputStat = await stat(inputPath);
     if(inputStat.isDirectory()) {
-        throw new Error('Filename is not specified');
+        throw new Error('Invalid arguments');
     }
     let outputPath = args[1] ? args[1] : currentDir;
     let outputStat;
@@ -20,7 +20,7 @@ const parseArgs = async (args, currentDir) => {
         }
     } catch (err) {
         if(err.code !== 'ENOENT') {
-            throw new Error('Invalid file path');
+            throw new Error('Invalid arguments');
         }
     }
 
